@@ -25,7 +25,7 @@ export default {
         const response = await axios.get(
           `https://api.unsplash.com/search/photos?query=${this.searchText}&per_page=30&client_id=lebTpI4Osa9WxNrZiPtmv2bQaeFaV7r4fQgoCQ6e-88`
         );
-        this.photos = [...this.photos, ...response.data.results];
+        this.photos = [...response.data.results];
       } catch (error) {
         console.error(error);
       } finally {
