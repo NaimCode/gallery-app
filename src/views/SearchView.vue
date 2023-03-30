@@ -3,11 +3,12 @@
 
 import axios from "axios";
 export default {
-  name: "HomeView",
+  name: "SearchView",
   components: {},
   data() {
     return {
       photos: [],
+      searchText: "",
       isLoading: false,
     };
   },
@@ -15,9 +16,6 @@ export default {
     this.loadPhotos();
   },
   methods: {
-    toSearch() {
-      this.$router.push(`/search`);
-    },
     toImage(id) {
       this.$router.push(`/image/${id}`);
     },
@@ -25,9 +23,9 @@ export default {
       try {
         this.isLoading = true;
         const response = await axios.get(
-          `https://api.unsplash.com/photos?per_page=30&client_id=lebTpI4Osa9WxNrZiPtmv2bQaeFaV7r4fQgoCQ6e-88`
+          `https://api.unsplash.com/search/photos?query=${this.searchText}&per_page=30&client_id=lebTpI4Osa9WxNrZiPtmv2bQaeFaV7r4fQgoCQ6e-88`
         );
-        this.photos = [...this.photos, ...response.data];
+        this.photos = [...this.photos, ...response.data.results];
       } catch (error) {
         console.error(error);
       } finally {
@@ -39,13 +37,18 @@ export default {
 </script>
 
 <template>
-  <div class="home p-6">
-    <button
-      @click="toSearch"
-      class="bg-white/50 font-semibold fixed text-xs top-2 right-3 py-2 px-4 rounded-md z-50 backdrop-blur-lg"
+  <div class="home relative">
+    <div
+      class="flex justify-center p-10 mx-auto w-full sticky top-0 left-0 z-50 backdrop-blur-md"
     >
-      Search
-    </button>
+      <input
+        v-model="searchText"
+        @keyup.enter="loadPhotos"
+        class="bg-white/90 font-semibold text-xs py-2 px-4 rounded-md z-50 backdrop-blur-lg w-[500px]"
+        type="text"
+        placeholder="Search"
+      />
+    </div>
     <div class="grid grid-cols-3 gap-4">
       <div
         v-for="photo in photos"
